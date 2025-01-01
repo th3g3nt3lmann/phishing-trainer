@@ -1,0 +1,34 @@
+{
+    "examples": [
+        {
+            "id": 1,
+            "type": "email",
+            "sender": "netflix@support-account.com",
+            "subject": "Netflix Account Suspended",
+            "content": "Dear Customer,\n\nWe detected a payment issue with your account. Update your payment information immediately.\n\nClick here: [Fake Link]",
+            "clues": [
+                "Unofficial email",
+                "Creates urgency",
+                "Requests info",
+                "Contains threats"
+            ],
+            "isPhishing": true,
+            "explanation": "This is phishing - fake domain and urgent language"
+        },
+        {
+            "id": 2,
+            "type": "email",
+            "sender": "no-reply@amazon.com",
+            "subject": "Your Amazon Order",
+            "content": "Hello,\n\nThank you for your order.\nOrder #: 123-4567890\nDelivery: 3-5 days",
+            "clues": [
+                "Official domain",
+                "Order number",
+                "No personal info",
+                "No links"
+            ],
+            "isPhishing": false,
+            "explanation": "This is legitimate - official domain, no urgent requests"
+        }
+    ]
+}

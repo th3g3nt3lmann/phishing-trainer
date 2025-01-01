@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for brand icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f6f8ff 0%, #f0e7ff 50%, #fff1f1 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            position: relative;
+            margin: 0;
+            padding: 0;
+            overflow-y: overlay;
+        }
+
+        /* Custom scrollbar for the entire page */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(203, 213, 224, 0.4);
+            border-radius: 10px;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(203, 213, 224, 0.6);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+
+        /* Email container scrollbar */
+        .email-container {
+            max-height: 60vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 6px;
+        }
+
+        .email-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .email-container::-webkit-scrollbar-track {
+            background: transparent;
+            margin: 4px 0;
+        }
+
+        .email-container::-webkit-scrollbar-thumb {
+            background: rgba(203, 213, 224, 0.5);
+            border-radius: 3px;
+            border: none;
+        }
+
+        .email-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(203, 213, 224, 0.8);
+        }
+
+        /* Firefox scrollbar styles */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(203, 213, 224, 0.4) transparent;
+        }
+
+        .email-container {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(203, 213, 224, 0.5) transparent;
+        }
+
+        /* Add subtle animated background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+            animation: subtle-move 20s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes subtle-move {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Update container styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Add subtle hover effect to glass containers */
+        .glass-effect:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+            transition: all 0.3s ease;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .button-hover {
+            transition: all 0.2s;
+        }
+
+        .button-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .button-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Score Animations */
+        @keyframes score-pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes score-increase {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-20px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes particle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Feedback Animations */
+        @keyframes slide-in {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slide-in-right {
+            0% {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes success-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+
+        @keyframes error-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        /* Animation Classes */
+        .score-pulse {
+            animation: score-pulse 0.5s ease-in-out;
+        }
+
+        .score-increase {
+            position: absolute;
+            top: 0;
+            right: -20px;
+            color: #22c55e;
+            font-weight: bold;
+            animation: score-increase 0.5s ease-out forwards;
+        }
+
+        .score-animation {
+            position: relative;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: particle 0.5s ease-out forwards;
+        }
+
+        .particle:nth-child(1) {
+            --tx: 10px;
+            --ty: -10px;
+        }
+
+        .particle:nth-child(2) {
+            --tx: -10px;
+            --ty: -10px;
+        }
+
+        .particle:nth-child(3) {
+            --tx: 0px;
+            --ty: -15px;
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .animate-slide-in {
+            animation: slide-in 0.3s ease-out;
+        }
+
+        .animate-slide-in-right {
+            animation: slide-in-right 0.3s ease-out;
+        }
+
+        .animate-success-pulse {
+            animation: success-pulse 1.5s infinite;
+        }
+
+        .animate-error-pulse {
+            animation: error-pulse 1.5s infinite;
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+
+        .animate-fade-in-delay {
+            animation: fade-in 0.3s ease-out 0.1s both;
+        }
+
+        .animate-fade-in-delay-2 {
+            animation: fade-in 0.3s ease-out 0.2s both;
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="py-8 px-4">
+    <div class="container mx-auto max-w-6xl">
+        <div class="text-center mb-8">
+            <h1
+                class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                Phishing Trainer
+            </h1>
+            <p class="text-lg md:text-xl text-gray-700 mb-8">Learn to identify phishing emails and protect yourself
+                online</p>
+
+            <!-- Score Display -->
+            <div class="inline-flex items-center space-x-12 glass-effect rounded-xl shadow-lg px-8 py-4 mb-4">
+                <div class="text-center">
+                    <div class="text-sm font-medium text-gray-600 mb-1">Score</div>
+                    <div id="current-score" class="text-3xl font-bold text-indigo-700 transition-all">0</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-sm font-medium text-gray-600 mb-1">Progress</div>
+                    <div id="question-counter" class="text-xl font-medium text-gray-800">1 of 10</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Stats Section -->
+            <div class="lg:col-span-1">
+                <div id="stats" class="glass-effect rounded-xl shadow-lg overflow-hidden"></div>
+            </div>
+
+            <!-- Game Container -->
+            <div class="lg:col-span-2">
+                <div class="glass-effect rounded-xl shadow-lg overflow-hidden">
+                    <div class="email-container" id="email-display"></div>
+
+                    <div class="p-6 bg-gray-50/80 border-t backdrop-blur-sm">
+                        <div class="text-center mb-6">
+                            <p class="text-xl font-semibold text-gray-800">Is this a phishing email?</p>
+                        </div>
+                        <div class="flex justify-center space-x-6">
+                            <button id="phishing-button" onclick="window.game.checkAnswer(true)"
+                                class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl button-hover font-medium flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                Yes, it's phishing
+                            </button>
+                            <button id="legitimate-button" onclick="window.game.checkAnswer(false)"
+                                class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl button-hover font-medium flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                                No, it's legitimate
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="feedback" class="hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+    <script>
+        // Initialize the game
+        window.game = new PhishingGame();
+    </script>
+</body>
+
+</html>
